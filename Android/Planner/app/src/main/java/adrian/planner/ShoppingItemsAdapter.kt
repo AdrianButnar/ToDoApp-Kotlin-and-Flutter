@@ -30,6 +30,7 @@ class ShoppingItemsAdapter(val context: Context, val shoppingItems: List<Shoppin
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val shoppingItem = shoppingItems[position]
         holder.setData(shoppingItem,position)
+        logd("reached onBindViewHolder on position: $position")
     }
 
     inner class MyViewHolder(itemView :View): RecyclerView.ViewHolder(itemView){
@@ -59,6 +60,8 @@ class ShoppingItemsAdapter(val context: Context, val shoppingItems: List<Shoppin
             itemView.txvQuantity.text = item!!.quantity
             currentItem = item
             currentPosition = pos
+            logd("set data on position: $pos")
+
         }
 //        fun setData(item: ShoppingItem?, pos:Int){
 //            itemView.tvTitle.text= item!!.title

@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
+        logd("onResume was called")
         super.onResume()
         loadAll()
     }

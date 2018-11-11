@@ -3,18 +3,18 @@ import 'package:flutter/foundation.dart';
 class ShoppingItem{
   final int id;
   final String title;
-  final String quantity;
+  //final String quantity;
 
   ShoppingItem({
     @required this.id,
     @required this.title,
-    @required this.quantity
+    //@required this.quantity
   });
   ShoppingItem copyWith({int id, String title, String body}){
     return ShoppingItem(
       id: id?? this.id,
       title: title ?? this.title,
-      quantity: quantity
+      //quantity: quantity
     );
   }
 }
