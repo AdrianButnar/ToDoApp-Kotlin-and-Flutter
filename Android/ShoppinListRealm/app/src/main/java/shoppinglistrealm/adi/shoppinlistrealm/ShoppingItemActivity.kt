@@ -1,4 +1,5 @@
-package adrian.planner
+package shoppinglistrealm.adi.shoppinlistrealm
+
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
@@ -8,12 +9,12 @@ import android.widget.Toast
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.kotlin.createObject
-import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_add_item.*
 
 class ShoppingItemActivity : AppCompatActivity() {
     private var realm: Realm = Realm.getDefaultInstance()
 
+    var  id = 0
 
     override fun onDestroy() {
         super.onDestroy()
@@ -36,16 +37,9 @@ class ShoppingItemActivity : AppCompatActivity() {
         btAdd.setOnClickListener {
 
             if(bundle == null) {
-
+                id++
                 //Supplier.shopppingItems.add(ShoppingItem(edtTitle.text.toString(), edtQuantity.text.toString()))
                 realm.executeTransaction { realm ->
-                    val id:Int;
-                    if(realm.where<ShoppingItem>().findAll().size != 0) {
-                        id = realm.where<ShoppingItem>().findAll().last()!!.id + 1
-                    }
-                    else{
-                        id = 1
-                    }
                     val item = realm.createObject<ShoppingItem>(id)
                     item.title = edtTitle.text.toString()
                     item.quantity = edtQuantity.text.toString()
@@ -53,13 +47,9 @@ class ShoppingItemActivity : AppCompatActivity() {
                 finish()
             }
             else{
-                realm.executeTransaction { realm ->
-
-                    val id:Int = bundle.getInt("itemId")
-                    val item:ShoppingItem = realm.where<ShoppingItem>().equalTo("id",id).findFirst()!!
-                    item.title = edtTitle.text.toString()
-                    item.quantity = edtQuantity.text.toString()
-                }
+//                //modifica in lista de supplier elements current
+//                shoppingItems[bundle.getInt("itemPosition")]!!.title =  edtTitle.text.toString()
+//                shoppingItems[bundle.getInt("itemPosition")]!!.quantity =  edtQuantity.text.toString()
                 finish()
             }
         }

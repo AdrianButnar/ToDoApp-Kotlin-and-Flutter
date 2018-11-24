@@ -1,10 +1,9 @@
-package adrian.planner
+package shoppinglistrealm.adi.shoppinlistrealm
+
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Canvas
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,13 +17,7 @@ import kotlinx.android.synthetic.main.list_item.view.*
 
 class ShoppingItemsAdapter(val context: Context, val shoppingItems: RealmResults<ShoppingItem>) : RecyclerView.Adapter<ShoppingItemsAdapter.MyViewHolder>(){
     private var realm: Realm = Realm.getDefaultInstance()
-    private lateinit var mRecyclerView: RecyclerView;
 
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-
-        mRecyclerView = recyclerView
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
@@ -46,38 +39,12 @@ class ShoppingItemsAdapter(val context: Context, val shoppingItems: RealmResults
 
 
 
-
-
     inner class MyViewHolder(itemView :View): RecyclerView.ViewHolder(itemView){
         var currentItem : ShoppingItem? = null
         var currentPosition: Int = 0
-
-        fun deleteItem(item: ShoppingItem) {
-            realm.executeTransaction { realm ->
-                currentItem!!.deleteFromRealm()
-            }
-
-        }
         init {
-
-
-            val swipeHandler = object : SwipeToDeleteCallback(context) {
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    deleteItem(realm.where<ShoppingItem>().findFirst()!!)
-                }
-            }
-            val itemTouchHelper = ItemTouchHelper(swipeHandler)
-
-            itemTouchHelper.attachToRecyclerView(mRecyclerView)
-
             itemView.setOnClickListener {
-                //Toast.makeText(context,currentItem!!.title + "Clicked !", Toast.LENGTH_SHORT).show()
-                val intent = Intent(context,ShoppingItemActivity::class.java)
-                intent.putExtra("itemPosition",currentPosition)//asta e ca sa stiu ce element trebuie sa updatez in lista de supplier
-                intent.putExtra("itemTitle", itemView.txvTitle.text.toString())
-                intent.putExtra("itemQuantity", itemView.txvQuantity.text.toString())
-                intent.putExtra("itemId",currentItem!!.id)
-                context.startActivity(intent)
+                Toast.makeText(context,currentItem!!.title + "Clicked !", Toast.LENGTH_SHORT).show()
             }
             itemView.imgDelete.setOnClickListener{
                 realm.executeTransaction { realm ->
@@ -91,7 +58,6 @@ class ShoppingItemsAdapter(val context: Context, val shoppingItems: RealmResults
                 intent.putExtra("itemPosition",currentPosition)//asta e ca sa stiu ce element trebuie sa updatez in lista de supplier
                 intent.putExtra("itemTitle", itemView.txvTitle.text.toString())
                 intent.putExtra("itemQuantity", itemView.txvQuantity.text.toString())
-                intent.putExtra("itemId",currentItem!!.id)
                 context.startActivity(intent)
                 //notifyDataSetChanged() asta devine optional
             }
@@ -111,6 +77,7 @@ class ShoppingItemsAdapter(val context: Context, val shoppingItems: RealmResults
 //            currentPosition = pos
 //        }
     }
+
 
 }
 
