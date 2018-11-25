@@ -2,14 +2,24 @@ import 'package:flutter/material.dart';
 //import 'package:english_words/english_words.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'dart:async';
 
 import 'package:shopping_flutter/model/model.dart';
 import "package:shopping_flutter/redux/actions.dart";
 import "package:shopping_flutter/redux/reducers.dart";
+import 'package:shopping_flutter/utils/databaseHelpers.dart';
 
-void main() => runApp(MyApp());
+void main() {
+
+
+  //await db.saveNote(new ShoppingItem("Flutter Tutorials"));
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     final Store<AppState> store = Store<AppState>(
@@ -22,25 +32,187 @@ class MyApp extends StatelessWidget {
         title: 'Shopping List',
         home: MyHomePage(),
       )
-
     );
   }
 }
-class MyHomePage extends StatelessWidget {
+
+class EditScreen extends StatelessWidget {
+  final _ViewModel model;
+  final ShoppingItem item;
+  EditScreen(this.model, this.item);
+
+
   @override
   Widget build(BuildContext context) {
+    final myController1 = TextEditingController();
+    final myController2 = TextEditingController();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Add Screen"),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    //padding: const EdgeInsets.only(bottom: 8.0),
+                    child: TextField(
+                      controller: myController1,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Title',
+                      ),
+                    ),
+                  ),
+                  TextField(
+                    controller: myController2,
+                    style: TextStyle(
+                      color: Colors.grey[500],
+                    ),
+                    decoration: InputDecoration(
+                        hintText: "Quantity"
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            RaisedButton(
+              child: const Text("Edit"),
+              onPressed: () {
+                //AddItemWidget(myController1.text,myController2.text);
+                model.onEditItem(item,myController1.text,myController2.text);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+
+//        child: [RaisedButton(
+//          onPressed: () {
+//            Navigator.pop(context);
+//          },
+
+
+
+      ),
+    );
+  }
+}
+
+
+class SecondScreen extends StatelessWidget {
+  final _ViewModel model;
+  SecondScreen(this.model);
+
+
+  @override
+  Widget build(BuildContext context) {
+    final myController1 = TextEditingController();
+    final myController2 = TextEditingController();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Add Screen"),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    //padding: const EdgeInsets.only(bottom: 8.0),
+                    child: TextField(
+                      controller: myController1,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Title',
+                      ),
+                    ),
+                  ),
+                  TextField(
+                    controller: myController2,
+                    style: TextStyle(
+                      color: Colors.grey[500],
+                    ),
+                    decoration: InputDecoration(
+                      hintText: "Quantity"
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            RaisedButton(
+              child: const Text("Add"),
+              onPressed: () {
+                //AddItemWidget(myController1.text,myController2.text);
+                model.onAddItem(myController1.text,myController2.text);
+                Navigator.pop(context);
+                },
+            ),
+          ],
+        ),
+
+//        child: [RaisedButton(
+//          onPressed: () {
+//            Navigator.pop(context);
+//          },
+
+
+
+      ),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+
+
+  @override
+  Widget build(BuildContext context) {
+    void _add(_ViewModel model) async{
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SecondScreen(model)),
+
+      );
+      //Scaffold.of(context).showSnackBar(SnackBar(content: Text("$result")));
+    }
+
 
     return Scaffold (
       appBar: AppBar(
         title: Text('Shopping List'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            tooltip: 'Run again',
+            // ignore: use_of_void_result
+            //onPressed: _add,
+
+          ),
+        ],
       ),
+
       body: StoreConnector<AppState,_ViewModel>(
           //a function which convers the shopping into the viewmodel that we want to create
           converter: (Store<AppState> store) => _ViewModel.create(store),
           builder: (BuildContext context, _ViewModel viewModel) => Column(
             children: <Widget>[
-              AddItemWidget(viewModel),
+              //AddItemWidget(viewModel),
               Expanded(child: ItemListWidget(viewModel)),
+              IconButton(
+                icon: Icon(Icons.add),
+                tooltip: 'Run again',
+                // ignore: use_of_void_result
+                onPressed: ()=>_add(viewModel)),
               //RemoveItemsButton(viewModel),
             ],
            ),
@@ -50,10 +222,11 @@ class MyHomePage extends StatelessWidget {
 }
 
 class _ViewModel{
+  //final DatabaseHelper db;
   final List<ShoppingItem> items;
   final Function(String,String) onAddItem;
   final Function(ShoppingItem) onRemoveItem;
-  final Function(ShoppingItem,String) onEditItem;
+  final Function(ShoppingItem,String,String) onEditItem;
 
   _ViewModel({
     this.items,
@@ -66,15 +239,15 @@ class _ViewModel{
   factory _ViewModel.create(Store<AppState> store){
     _onAddItem(String title,String quantity){
       //store.dispatch(AddItemAction(title, quantity));
-      store.dispatch(AddItemAction(title));
+      store.dispatch(AddItemAction(title,quantity));
     }
 
     _onRemoveItem(ShoppingItem item) {
       store.dispatch(RemoveItemAction(item));
     }
 
-    _onEditItem(ShoppingItem item,String newTitle){
-      store.dispatch(EditItemAction(item,newTitle));
+    _onEditItem(ShoppingItem item,String newTitle,String newQuantity){
+      store.dispatch(EditItemAction(item,newTitle,newQuantity));
     }
 
     return _ViewModel(
@@ -93,6 +266,14 @@ class AddItemWidget extends StatefulWidget {
 
   @override
   _AddItemState createState() => _AddItemState();
+}
+
+class _SuperAddItemState extends State<AddItemWidget> {
+
+  @override
+  Widget build(BuildContext context) {
+    widget.model.onAddItem("ha","hu");
+  }
 }
 
 class _AddItemState extends State<AddItemWidget> {
@@ -117,16 +298,24 @@ class ItemListWidget extends StatelessWidget {
   final _ViewModel model;
   ItemListWidget(this.model);
 
+
   @override
   Widget build(BuildContext context) {
+    void _edit(_ViewModel model,ShoppingItem item) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => EditScreen(model,item)),
+
+      );
+    }
     return ListView(
       children: model.items
           .map((ShoppingItem item) => ListTile(
-        title: Text(item.title),
+        title: Text(item.title+ " "+ item.quantity),
         trailing: IconButton(
             icon: Icon(Icons.edit),
             //onPressed: () => model.onEditItem(item,"textDinTextBOx")),
-            onPressed: () => model.onEditItem(item,"textdinTextBox")),
+            onPressed: () => _edit(model,item)),
         leading: IconButton(
           icon: Icon(Icons.delete),
           onPressed: () => model.onRemoveItem(item),

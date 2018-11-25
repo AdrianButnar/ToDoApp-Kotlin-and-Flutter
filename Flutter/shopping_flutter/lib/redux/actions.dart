@@ -3,13 +3,13 @@ import 'package:shopping_flutter/model/model.dart';
 class AddItemAction{
   static int _id = 0;
   final String title;
-  //final String quantity;
+  final String quantity;
 
 //  AddItemAction(this.title,this.quantity) {
 //    _id++;
 //  }
 
-  AddItemAction(this.title){
+  AddItemAction(this.title,this.quantity){
     _id++;
   }
   int get id => _id;
@@ -23,5 +23,6 @@ class RemoveItemAction{
 class EditItemAction{
   final ShoppingItem item;
   final String newTitle;
-  EditItemAction(this.item,this.newTitle);
+  final String newQuantity;
+  EditItemAction(this.item,this.newTitle,this.newQuantity);
 }
