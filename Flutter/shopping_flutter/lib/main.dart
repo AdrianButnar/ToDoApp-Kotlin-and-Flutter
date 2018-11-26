@@ -8,30 +8,38 @@ import 'package:shopping_flutter/model/model.dart';
 import "package:shopping_flutter/redux/actions.dart";
 import "package:shopping_flutter/redux/reducers.dart";
 import 'package:shopping_flutter/utils/databaseHelpers.dart';
-
-void main() {
-
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux_thunk/redux_thunk.dart';
+Future main() async{
 
   //await db.saveNote(new ShoppingItem("Flutter Tutorials"));
-
-  runApp(MyApp());
+  var db = new DatabaseHelper();
+  db.initDb();
+  List initialShoppingList = await db.getAllItems();
+  //db.saveItem(ShoppingItem(id: -2, title: "HARDCODED", quantity: "ITEM"));
+  List<ShoppingItem> newList = new List<ShoppingItem>();
+  initialShoppingList.forEach((item)=>(newList.add(ShoppingItem.fromMap(item))));
+  runApp(MyApp(db,newList));
 }
 
 class MyApp extends StatelessWidget {
+  final DatabaseHelper db;
+  final List<ShoppingItem> newList;
+  MyApp(this.db, this.newList);
 
 
   @override
   Widget build(BuildContext context) {
     final Store<AppState> store = Store<AppState>(
       appStateReducer,
-      initialState: AppState.initialState(),
+      initialState: AppState.initialState(db,newList),
     );
     return StoreProvider(
-      store : store,
-      child: MaterialApp(
-        title: 'Shopping List',
-        home: MyHomePage(),
-      )
+        store : store,
+        child: MaterialApp(
+          title: 'Shopping List',
+          home: MyHomePage(db),
+        )
     );
   }
 }
@@ -62,20 +70,21 @@ class EditScreen extends StatelessWidget {
                     child: TextField(
                       controller: myController1,
                       style: TextStyle(
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                       decoration: InputDecoration(
-                        hintText: 'Title',
+                        hintText: item.title.toString(),
                       ),
                     ),
                   ),
                   TextField(
                     controller: myController2,
                     style: TextStyle(
-                      color: Colors.grey[500],
+                      color: Colors.black,
                     ),
                     decoration: InputDecoration(
-                        hintText: "Quantity"
+                        hintText: item.quantity.toString()
                     ),
                   ),
                 ],
@@ -130,6 +139,7 @@ class SecondScreen extends StatelessWidget {
                     child: TextField(
                       controller: myController1,
                       style: TextStyle(
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                       decoration: InputDecoration(
@@ -140,7 +150,7 @@ class SecondScreen extends StatelessWidget {
                   TextField(
                     controller: myController2,
                     style: TextStyle(
-                      color: Colors.grey[500],
+                        color: Colors.black,
                     ),
                     decoration: InputDecoration(
                       hintText: "Quantity"
@@ -173,6 +183,9 @@ class SecondScreen extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
+  final DatabaseHelper db;
+  MyHomePage(this.db);
+
 
 
   @override
@@ -191,13 +204,13 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Shopping List'),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            tooltip: 'Run again',
-            // ignore: use_of_void_result
-            //onPressed: _add,
-
-          ),
+//          IconButton( //asta e butonul vechi de add
+//            icon: Icon(Icons.add),
+//            tooltip: 'Run again',
+//            // ignore: use_of_void_result
+//            //onPressed: _add,
+//
+//          ),
         ],
       ),
 
@@ -222,24 +235,29 @@ class MyHomePage extends StatelessWidget {
 }
 
 class _ViewModel{
-  //final DatabaseHelper db;
+  static DatabaseHelper db ;
   final List<ShoppingItem> items;
   final Function(String,String) onAddItem;
   final Function(ShoppingItem) onRemoveItem;
   final Function(ShoppingItem,String,String) onEditItem;
 
   _ViewModel({
+    //this.db,
     this.items,
     this.onAddItem,
     this.onRemoveItem,
     this.onEditItem
 });
 
+  //set _db(DatabaseHelper _db) => this.db = _db;
+
+
 
   factory _ViewModel.create(Store<AppState> store){
     _onAddItem(String title,String quantity){
       //store.dispatch(AddItemAction(title, quantity));
       store.dispatch(AddItemAction(title,quantity));
+      //store.dispatch(ThunkAction.saveItem);
     }
 
     _onRemoveItem(ShoppingItem item) {
@@ -251,7 +269,7 @@ class _ViewModel{
     }
 
     return _ViewModel(
-      items: store.state.shoppingItems,
+      items:store.state.shoppingItems,
       onAddItem: _onAddItem,
       onEditItem: _onEditItem,
       onRemoveItem: _onRemoveItem,
@@ -297,8 +315,6 @@ class _AddItemState extends State<AddItemWidget> {
 class ItemListWidget extends StatelessWidget {
   final _ViewModel model;
   ItemListWidget(this.model);
-
-
   @override
   Widget build(BuildContext context) {
     void _edit(_ViewModel model,ShoppingItem item) {
@@ -310,19 +326,18 @@ class ItemListWidget extends StatelessWidget {
     }
     return ListView(
       children: model.items
-          .map((ShoppingItem item) => ListTile(
-        title: Text(item.title+ " "+ item.quantity),
-        trailing: IconButton(
-            icon: Icon(Icons.edit),
-            //onPressed: () => model.onEditItem(item,"textDinTextBOx")),
-            onPressed: () => _edit(model,item)),
-        leading: IconButton(
-          icon: Icon(Icons.delete),
-          onPressed: () => model.onRemoveItem(item),
-        )
+          .map(( item) => ListTile(
+          title: Text(item.title+ " "+ item.quantity),
+          trailing: IconButton(
+              icon: Icon(Icons.edit),
+              //onPressed: () => model.onEditItem(item,"textDinTextBOx")),
+              onPressed: () => _edit(model,item)),
+          leading: IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () => model.onRemoveItem(item),
+          )
       ))
           .toList(),
     );
   }
 }
-
