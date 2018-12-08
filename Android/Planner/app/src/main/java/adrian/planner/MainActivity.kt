@@ -17,10 +17,12 @@ import io.realm.kotlin.delete
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 
+
+
 class MainActivity : AppCompatActivity() {
     private val p = Paint()
     private lateinit var realm: Realm
-    //private lateinit var adapter: ShoppingItemsAdapter
+    private lateinit var adapter: ShoppingItemsAdapter
     //private var shoppingItems : RealmList<ShoppingItem> = RealmList<ShoppingItem>()
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -32,14 +34,10 @@ class MainActivity : AppCompatActivity() {
             .build()
 
 
-
-
         //realmConfiguration.shouldDeleteRealmIfMigrationNeeded()
 
         // Open the realm for the UI thread.
         realm = Realm.getDefaultInstance()
-
-
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -52,8 +50,7 @@ class MainActivity : AppCompatActivity() {
         val adapter = ShoppingItemsAdapter(this,realm.where<ShoppingItem>().findAll())
 
         shoppingListRecyclerView.adapter = adapter
-
-
+        //initSwipe()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

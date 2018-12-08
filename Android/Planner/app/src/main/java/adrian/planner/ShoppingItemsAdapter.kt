@@ -46,8 +46,6 @@ class ShoppingItemsAdapter(val context: Context, val shoppingItems: RealmResults
 
 
 
-
-
     inner class MyViewHolder(itemView :View): RecyclerView.ViewHolder(itemView){
         var currentItem : ShoppingItem? = null
         var currentPosition: Int = 0
@@ -68,7 +66,7 @@ class ShoppingItemsAdapter(val context: Context, val shoppingItems: RealmResults
             }
             val itemTouchHelper = ItemTouchHelper(swipeHandler)
 
-            itemTouchHelper.attachToRecyclerView(mRecyclerView)
+            //itemTouchHelper.attachToRecyclerView(mRecyclerView)
 
             itemView.setOnClickListener {
                 //Toast.makeText(context,currentItem!!.title + "Clicked !", Toast.LENGTH_SHORT).show()

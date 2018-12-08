@@ -31,8 +31,6 @@ class ShoppingItemActivity : AppCompatActivity() {
 
         }
 
-
-
         btAdd.setOnClickListener {
 
             if(bundle == null) {
