@@ -10,10 +10,11 @@ import "package:shopping_flutter/redux/reducers.dart";
 import 'package:shopping_flutter/utils/databaseHelpers.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
+var db = new DatabaseHelper();
+
 Future main() async{
 
   //await db.saveNote(new ShoppingItem("Flutter Tutorials"));
-  var db = new DatabaseHelper();
   db.initDb();
   List initialShoppingList = await db.getAllItems();
   //db.saveItem(ShoppingItem(id: -2, title: "HARDCODED", quantity: "ITEM"));
@@ -28,11 +29,13 @@ class MyApp extends StatelessWidget {
   MyApp(this.db, this.newList);
 
 
+
   @override
   Widget build(BuildContext context) {
     final Store<AppState> store = Store<AppState>(
       appStateReducer,
       initialState: AppState.initialState(db,newList),
+      middleware: [thunkMiddleware]
     );
     return StoreProvider(
         store : store,
@@ -94,7 +97,7 @@ class EditScreen extends StatelessWidget {
               child: const Text("Edit"),
               onPressed: () {
                 //AddItemWidget(myController1.text,myController2.text);
-                model.onEditItem(item,myController1.text,myController2.text);
+                model.onEditItem(model.db,item,myController1.text,myController2.text);
                 Navigator.pop(context);
               },
             ),
@@ -150,10 +153,10 @@ class SecondScreen extends StatelessWidget {
                   TextField(
                     controller: myController2,
                     style: TextStyle(
-                        color: Colors.black,
+                      color: Colors.black,
                     ),
                     decoration: InputDecoration(
-                      hintText: "Quantity"
+                        hintText: "Quantity"
                     ),
                   ),
                 ],
@@ -163,9 +166,9 @@ class SecondScreen extends StatelessWidget {
               child: const Text("Add"),
               onPressed: () {
                 //AddItemWidget(myController1.text,myController2.text);
-                model.onAddItem(myController1.text,myController2.text);
+                model.onAddItem(model.db,myController1.text,myController2.text);
                 Navigator.pop(context);
-                },
+              },
             ),
           ],
         ),
@@ -215,58 +218,123 @@ class MyHomePage extends StatelessWidget {
       ),
 
       body: StoreConnector<AppState,_ViewModel>(
-          //a function which convers the shopping into the viewmodel that we want to create
-          converter: (Store<AppState> store) => _ViewModel.create(store),
-          builder: (BuildContext context, _ViewModel viewModel) => Column(
-            children: <Widget>[
-              //AddItemWidget(viewModel),
-              Expanded(child: ItemListWidget(viewModel)),
-              IconButton(
+        //a function which convers the shopping into the viewmodel that we want to create
+        converter: (Store<AppState> store) => _ViewModel.create(store),
+        builder: (BuildContext context, _ViewModel viewModel) => Column(
+          children: <Widget>[
+            //AddItemWidget(viewModel),
+            Expanded(child: ItemListWidget(viewModel._db(db))),
+            IconButton(
                 icon: Icon(Icons.add),
                 tooltip: 'Run again',
                 // ignore: use_of_void_result
-                onPressed: ()=>_add(viewModel)),
-              //RemoveItemsButton(viewModel),
-            ],
-           ),
-          ),
+                onPressed: ()=>_add(viewModel._db(db))),
+            //RemoveItemsButton(viewModel),
+          ],
+        ),
+      ),
     );
   }
 }
 
+class EditItemAction{
+  final ShoppingItem item;
+  final String newTitle;
+  final String newQuantity;
+  EditItemAction(this.item,this.newTitle,this.newQuantity);
+}
+
+class RemoveItemAction{
+  final ShoppingItem item;
+  RemoveItemAction(this.item);
+}
+
+class AddItemAction<AppState> {
+  int id;
+  //List<ShoppingItem> items;
+  String title;
+  final String quantity;
+  DatabaseHelper db;
+
+
+
+//  AddItemAction(this.title,this.quantity) {
+//    _id++;
+//  }
+
+  AddItemAction(this.id,this.title, this.quantity, DatabaseHelper db) {
+
+  }
+}
+
 class _ViewModel{
-  static DatabaseHelper db ;
+  DatabaseHelper db ;
   final List<ShoppingItem> items;
-  final Function(String,String) onAddItem;
-  final Function(ShoppingItem) onRemoveItem;
-  final Function(ShoppingItem,String,String) onEditItem;
+  final Function(DatabaseHelper,String,String) onAddItem;
+  final Function(DatabaseHelper,ShoppingItem) onRemoveItem;
+  final Function(DatabaseHelper,ShoppingItem,String,String) onEditItem;
 
   _ViewModel({
-    //this.db,
+    this.db,
     this.items,
     this.onAddItem,
     this.onRemoveItem,
     this.onEditItem
-});
+  });
 
-  //set _db(DatabaseHelper _db) => this.db = _db;
+  _ViewModel _db(DatabaseHelper _db){this.db = _db; return this;}
 
 
 
   factory _ViewModel.create(Store<AppState> store){
-    _onAddItem(String title,String quantity){
+    _onAddItem(DatabaseHelper db,String title,String quantity){
       //store.dispatch(AddItemAction(title, quantity));
-      store.dispatch(AddItemAction(title,quantity));
+      ThunkAction<AppState> addThunk = (Store<AppState> store) async {
+        int maxId;
+        if(await db.getCount()==null){
+          maxId=1;
+        }
+        else{
+          maxId= await db.getCount();
+        }
+        while (await db.getItem(maxId)!=null){
+          maxId++;
+        }
+        await db.saveItem(ShoppingItem(id: maxId, title: title, quantity: quantity));
+        List elems = await db.getAllItems();
+        List<ShoppingItem> newList = new List<ShoppingItem>();
+        elems.forEach((item) => (newList.add(ShoppingItem.fromMap(item))));
+        //return newList;
+        store.dispatch(AddItemAction(maxId,title,quantity,db));
+
+      };
+      store.dispatch(addThunk);
       //store.dispatch(ThunkAction.saveItem);
     }
 
-    _onRemoveItem(ShoppingItem item) {
-      store.dispatch(RemoveItemAction(item));
+    _onRemoveItem(DatabaseHelper db,ShoppingItem item) {
+      ThunkAction<AppState> removeThunk = (Store<AppState> store) async {
+        await db.deleteItem(item.id);
+
+        //return newList;
+        store.dispatch(RemoveItemAction(item));
+      };
+        store.dispatch(removeThunk);
+
     }
 
-    _onEditItem(ShoppingItem item,String newTitle,String newQuantity){
-      store.dispatch(EditItemAction(item,newTitle,newQuantity));
-    }
+    _onEditItem(DatabaseHelper db,ShoppingItem item,String newTitle,String newQuantity){
+      ThunkAction<AppState> editThunk = (Store<AppState> store) async {
+        await db.deleteItem(item.id);
+        await db.saveItem(ShoppingItem(id: item.id, title: newTitle, quantity: newQuantity));
+        List elems = await db.getAllItems();
+        List<ShoppingItem> newList = new List<ShoppingItem>();
+        elems.forEach((item) => (newList.add(ShoppingItem.fromMap(item))));
+        //return newList;
+        store.dispatch(EditItemAction(item,newTitle,newQuantity));
+      };
+      store.dispatch(editThunk);
+   }
 
     return _ViewModel(
       items:store.state.shoppingItems,
@@ -275,6 +343,7 @@ class _ViewModel{
       onRemoveItem: _onRemoveItem,
     );
   }
+
 }
 
 class AddItemWidget extends StatefulWidget {
@@ -286,13 +355,13 @@ class AddItemWidget extends StatefulWidget {
   _AddItemState createState() => _AddItemState();
 }
 
-class _SuperAddItemState extends State<AddItemWidget> {
-
-  @override
-  Widget build(BuildContext context) {
-    widget.model.onAddItem("ha","hu");
-  }
-}
+//class _SuperAddItemState extends State<AddItemWidget> {
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    widget.model.onAddItem("ha","hu");
+//  }
+//}
 
 class _AddItemState extends State<AddItemWidget> {
   final TextEditingController controller = TextEditingController();
@@ -305,7 +374,7 @@ class _AddItemState extends State<AddItemWidget> {
         hintText: ' Add an Item',
       ),
       onSubmitted: (String title) {
-        widget.model.onAddItem(title,"");
+        //widget.model.onAddItem(title,"");
         controller.text = '';
       },
     );
@@ -334,7 +403,7 @@ class ItemListWidget extends StatelessWidget {
               onPressed: () => _edit(model,item)),
           leading: IconButton(
             icon: Icon(Icons.delete),
-            onPressed: () => model.onRemoveItem(item),
+            onPressed: () => model.onRemoveItem(model.db,item),
           )
       ))
           .toList(),
