@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
     private val p = Paint()
     private lateinit var realm: Realm
-    private lateinit var adapter: ShoppingItemsAdapter
+    private lateinit var myAdapter: ShoppingItemsAdapter
     //private var shoppingItems : RealmList<ShoppingItem> = RealmList<ShoppingItem>()
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -48,9 +48,14 @@ class MainActivity : AppCompatActivity() {
         shoppingListRecyclerView.layoutManager = layoutManager
 
         val adapter = ShoppingItemsAdapter(this,realm.where<ShoppingItem>().findAll())
-
+        myAdapter = adapter
         shoppingListRecyclerView.adapter = adapter
         //initSwipe()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        myAdapter.notifyDataSetChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -63,7 +68,7 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.addBtn -> {
                     val intent = Intent(this, ShoppingItemActivity::class.java)
-                    startActivity(intent)
+                    startActivityForResult(intent,1)
 
                 }
 
@@ -75,13 +80,14 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         logd("onResume was called")
         super.onResume()
-        loadAll()
+        //loadAll()
+        myAdapter.notifyDataSetChanged()
     }
-     fun loadAll() {
-
-        val itemsAdapter = ShoppingItemsAdapter(this,realm.where<ShoppingItem>().findAll())
-        shoppingListRecyclerView.adapter = itemsAdapter
-    }
+//     fun loadAll() {
+//
+//        val itemsAdapter = ShoppingItemsAdapter(this,realm.where<ShoppingItem>().findAll())
+//        shoppingListRecyclerView.adapter = itemsAdapter
+//    }
 
     override fun onDestroy() {
         super.onDestroy()
