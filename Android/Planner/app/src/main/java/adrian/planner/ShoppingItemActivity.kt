@@ -12,12 +12,12 @@ import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_add_item.*
 
 class ShoppingItemActivity : AppCompatActivity() {
-    private var realm: Realm = Realm.getDefaultInstance()
+    //private var realm: Realm = Realm.getDefaultInstance()
 
 
     override fun onDestroy() {
         super.onDestroy()
-        realm.close()
+        //realm.close()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,28 +36,28 @@ class ShoppingItemActivity : AppCompatActivity() {
             if(bundle == null) {
 
                 //Supplier.shopppingItems.add(ShoppingItem(edtTitle.text.toString(), edtQuantity.text.toString()))
-                realm.executeTransaction { realm ->
-                    val id:Int;
-                    if(realm.where<ShoppingItem>().findAll().size != 0) {
-                        id = realm.where<ShoppingItem>().findAll().last()!!.id + 1
-                    }
-                    else{
-                        id = 1
-                    }
-                    val item = realm.createObject<ShoppingItem>(id)
-                    item.title = edtTitle.text.toString()
-                    item.quantity = edtQuantity.text.toString()
-                }
+//                realm.executeTransaction { realm ->
+//                    val id:Int;
+//                    if(realm.where<ShoppingItem>().findAll().size != 0) {
+//                        id = realm.where<ShoppingItem>().findAll().last()!!.id + 1
+//                    }
+//                    else{
+//                        id = 1
+//                    }
+//                    val item = realm.createObject<ShoppingItem>(id)
+//                    item.title = edtTitle.text.toString()
+//                    item.quantity = edtQuantity.text.toString()
+//                }
                 finish()
             }
             else{
-                realm.executeTransaction { realm ->
-
-                    val id:Int = bundle.getInt("itemId")
-                    val item:ShoppingItem = realm.where<ShoppingItem>().equalTo("id",id).findFirst()!!
-                    item.title = edtTitle.text.toString()
-                    item.quantity = edtQuantity.text.toString()
-                }
+//                realm.executeTransaction { realm ->
+//
+//                    val id:Int = bundle.getInt("itemId")
+//                    val item:ShoppingItem = realm.where<ShoppingItem>().equalTo("id",id).findFirst()!!
+//                    item.title = edtTitle.text.toString()
+//                    item.quantity = edtQuantity.text.toString()
+//                }
                 finish()
             }
         }

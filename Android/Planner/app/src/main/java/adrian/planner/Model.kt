@@ -1,6 +1,7 @@
 package adrian.planner
 
 import android.support.annotation.IntegerRes
+import com.google.gson.annotations.SerializedName
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.LinkingObjects
@@ -24,3 +25,12 @@ open class ShoppingItem(@PrimaryKey var id: Int = 0, var title: String="",var qu
 //    var shoppingItems : RealmList<ShoppingItem> = RealmList<ShoppingItem>()
 //
 //)
+data class ShoppingItem2(@PrimaryKey var id: Int = 0, val title: String, val quantity: String )
+data class ShoppingItemList (
+    @SerializedName("items" )
+    val items: List<ShoppingItem2>
+)
+data class ShoppingItemEmbedded (
+    @SerializedName("_embedded" )
+    val list: ShoppingItemList
+)

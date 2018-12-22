@@ -2,7 +2,6 @@ package adrian.planner
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Canvas
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
@@ -10,15 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import io.realm.Realm
-import io.realm.RealmModel
 import io.realm.RealmResults
-import io.realm.kotlin.delete
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.list_item.view.*
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
-class ShoppingItemsAdapter(val context: Context, val shoppingItems: RealmResults<ShoppingItem>) : RecyclerView.Adapter<ShoppingItemsAdapter.MyViewHolder>(){
-    private var realm: Realm = Realm.getDefaultInstance()
+class ShoppingItemsAdapter(val context: Context) : RecyclerView.Adapter<ShoppingItemsAdapter.MyViewHolder>(){
     private lateinit var mRecyclerView: RecyclerView;
+    var list: ArrayList<ShoppingItem2> = ArrayList()
+
+    val client by lazy { ModelClientAPI.create() }
+
+    init { refreshMovies() }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -35,38 +38,44 @@ class ShoppingItemsAdapter(val context: Context, val shoppingItems: RealmResults
 
 
     override fun getItemCount(): Int {
-        return shoppingItems.size;
+        return list.size;
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val shoppingItem = shoppingItems[position]
+        val shoppingItem = list[position]
         holder.setData(shoppingItem,position)
         logd("reached onBindViewHolder on position: $position")
     }
 
+    fun refreshMovies() {
+        client.getItems()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result ->
+                    list.clear()
+                    list.addAll(result)
+                    notifyDataSetChanged()
+                },
+                { error ->
+                    Toast.makeText(context, "Refresh error: ${error.message}", Toast.LENGTH_LONG).show()
+                    logd("${error.message}")
+                }
+            )
+    }
 
 
     inner class MyViewHolder(itemView :View): RecyclerView.ViewHolder(itemView){
-        var currentItem : ShoppingItem? = null
+        var currentItem : ShoppingItem2? = null
         var currentPosition: Int = 0
 
-        fun deleteItem(item: ShoppingItem) {
-            realm.executeTransaction { realm ->
-                currentItem!!.deleteFromRealm()
-            }
-
-        }
+//        fun deleteItem(item: ShoppingItem) {
+//            realm.executeTransaction { realm ->
+//                currentItem!!.deleteFromRealm()
+//            }
+//
+//        }
         init {
-
-
-            val swipeHandler = object : SwipeToDeleteCallback(context) {
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    deleteItem(realm.where<ShoppingItem>().findFirst()!!)
-                }
-            }
-            val itemTouchHelper = ItemTouchHelper(swipeHandler)
-
-            //itemTouchHelper.attachToRecyclerView(mRecyclerView)
 
             itemView.setOnClickListener {
                 //Toast.makeText(context,currentItem!!.title + "Clicked !", Toast.LENGTH_SHORT).show()
@@ -78,10 +87,10 @@ class ShoppingItemsAdapter(val context: Context, val shoppingItems: RealmResults
                 context.startActivity(intent)
             }
             itemView.imgDelete.setOnClickListener{
-                realm.executeTransaction { realm ->
-                    currentItem!!.deleteFromRealm()
-                    notifyDataSetChanged()
-                }
+//                realm.executeTransaction { realm ->
+//                    //currentItem!!.deleteFromRealm()
+//                    notifyDataSetChanged()
+//                }
 
             }
             itemView.imgEdit.setOnClickListener{
@@ -94,7 +103,7 @@ class ShoppingItemsAdapter(val context: Context, val shoppingItems: RealmResults
                 //notifyDataSetChanged() asta devine optional
             }
         }
-        fun setData(item : ShoppingItem?, pos: Int){
+        fun setData(item : ShoppingItem2?, pos: Int){
             itemView.txvTitle.text = item!!.title
             itemView.txvQuantity.text = item.quantity
             currentItem = item
