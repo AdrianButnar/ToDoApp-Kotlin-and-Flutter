@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 interface ModelClientAPI {
-    @GET("items") fun getItems(): Observable<List<ShoppingItem2>>
+    @GET("items") fun getItems(): Observable<List<ShoppingItem>>
     @POST("items") fun addItem(@Body Item: ShoppingItem): Completable
     @DELETE("items/{id}") fun deleteItem(@Path("id") id: Int) : Completable
     @PUT("items/{id}") fun updateItem(@Path("id")id: Int, @Body shoppingItem: ShoppingItem) : Completable

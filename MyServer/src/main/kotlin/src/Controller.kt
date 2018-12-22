@@ -32,7 +32,7 @@ class Controller(private val repository: ItemRepository) {
 
         return repository.findById(itemId).map { existingItem ->
             val updatedItem: ShoppingItem = existingItem
-                    .copy(title = item.title)
+                    .copy(title = item.title,quantity = item.quantity)
             ResponseEntity.ok().body(repository.save(updatedItem))
         }.orElse(ResponseEntity.notFound().build())
     }

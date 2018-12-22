@@ -2,16 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6fee0fad-89e7-42ff-bbbb-1ae2a549ba0b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../Android/Planner/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../Android/Planner/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Android/Planner/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Android/Planner/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Android/Planner/app/src/main/java/adrian/planner/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../Android/Planner/app/src/main/java/adrian/planner/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Android/Planner/app/src/main/java/adrian/planner/Model.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../Android/Planner/app/src/main/java/adrian/planner/Model.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Android/Planner/app/src/main/java/adrian/planner/ModelClientAPI.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../Android/Planner/app/src/main/java/adrian/planner/ModelClientAPI.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Android/Planner/app/src/main/java/adrian/planner/Repository.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Android/Planner/app/src/main/java/adrian/planner/MyApplication.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../Android/Planner/app/src/main/java/adrian/planner/MyApplication.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Android/Planner/app/src/main/java/adrian/planner/ShoppingItemActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../Android/Planner/app/src/main/java/adrian/planner/ShoppingItemActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Android/Planner/app/src/main/java/adrian/planner/ShoppingItemsAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../Android/Planner/app/src/main/java/adrian/planner/ShoppingItemsAdapter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Android/Planner/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../Android/Planner/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/.idea/runConfigurations.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../server/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/src/ApplicationKt$init$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/src/ApplicationKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/src/ApplicationKt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/src/Controller$updateItemById$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/src/Controller$updateItemById$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/resources/data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/resources/data.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/src/Application.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/src/Application.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/src/Controller.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/src/Controller.kt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -132,7 +135,7 @@
     <session id="-259533123">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
+          <entry key="project.closed" value="2" />
           <entry key="project.open.time.12" value="1" />
           <entry key="project.open.time.5" value="1" />
           <entry key="project.opened" value="2" />
@@ -149,7 +152,7 @@
           <entry key="properties" value="1" />
           <entry key="shopping_items" value="1" />
           <entry key="shopping_items_pkey" value="1" />
-          <entry key="sql" value="9" />
+          <entry key="sql" value="10" />
           <entry key="txt" value="1" />
         </counts>
       </usages-collector>
@@ -162,23 +165,23 @@
           <entry key="Kotlin" value="13" />
           <entry key="PLAIN_TEXT" value="5" />
           <entry key="Properties" value="1" />
-          <entry key="SQL" value="9" />
+          <entry key="SQL" value="10" />
           <entry key="Scratch" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="gradle" value="112" />
-          <entry key="kt" value="866" />
-          <entry key="properties" value="151" />
+          <entry key="kt" value="876" />
+          <entry key="properties" value="171" />
           <entry key="sql" value="228" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Groovy" value="112" />
-          <entry key="Kotlin" value="866" />
-          <entry key="Properties" value="151" />
+          <entry key="Kotlin" value="876" />
+          <entry key="Properties" value="171" />
           <entry key="SQL" value="228" />
         </counts>
       </usages-collector>
@@ -189,8 +192,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/kotlin/src/Application.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-113">
-              <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+            <state relative-caret-position="180">
+              <caret line="38" column="1" lean-forward="true" selection-start-line="38" selection-start-column="1" selection-end-line="38" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -199,7 +202,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/kotlin/src/ItemRepository.kt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="102">
-              <caret line="6" column="29" lean-forward="true" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
+              <caret line="6" column="60" lean-forward="true" selection-start-line="6" selection-start-column="60" selection-end-line="6" selection-end-column="60" />
               <folding>
                 <element signature="e#13#155#0" expanded="true" />
               </folding>
@@ -210,8 +213,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/kotlin/src/SecurityConfig.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" column="30" selection-start-line="8" selection-start-column="30" selection-end-line="8" selection-end-column="30" />
+            <state relative-caret-position="119">
+              <caret line="7" column="14" lean-forward="true" selection-start-line="7" selection-start-column="14" selection-end-line="7" selection-end-column="14" />
               <folding>
                 <element signature="e#13#252#0" expanded="true" />
               </folding>
@@ -219,7 +222,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/kotlin/src/ShoppingItem.kt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="136">
@@ -231,17 +234,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="34">
+              <caret line="2" column="35" lean-forward="true" selection-start-line="2" selection-start-column="35" selection-end-line="2" selection-end-column="35" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/resources/data.sql">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="17">
-              <caret line="1" column="13" lean-forward="true" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
+              <caret line="1" column="64" selection-start-line="1" selection-start-column="64" selection-end-line="1" selection-end-column="64" />
             </state>
           </provider>
         </entry>
@@ -258,8 +261,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/kotlin/src/Controller.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="16" column="26" lean-forward="true" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
+            <state relative-caret-position="-7">
+              <caret line="34" column="58" selection-start-line="34" selection-start-column="58" selection-end-line="34" selection-end-column="58" />
               <folding>
                 <element signature="e#13#181#0" expanded="true" />
               </folding>
@@ -682,9 +685,9 @@
         <option value="$PROJECT_DIR$/src/main/kotlin/src/SecurityConfig.kt" />
         <option value="$PROJECT_DIR$/src/main/resources/insert.sql" />
         <option value="$PROJECT_DIR$/src/main/kotlin/src/GreetingController.kt" />
-        <option value="$PROJECT_DIR$/src/main/kotlin/src/Application.kt" />
         <option value="$PROJECT_DIR$/src/main/kotlin/src/ShoppingItem.kt" />
         <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/src/Application.kt" />
         <option value="$PROJECT_DIR$/src/main/kotlin/src/Controller.kt" />
         <option value="$PROJECT_DIR$/src/main/resources/application.properties" />
         <option value="$PROJECT_DIR$/src/main/resources/data.sql" />
@@ -703,8 +706,9 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="952" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
     <option name="width" value="977" />
     <option name="height" value="1038" />
   </component>
@@ -782,7 +786,7 @@
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545475290760" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545487651000" />
     <property name="database.console.LAST_STATE" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -859,18 +863,17 @@
       <option name="presentableId" value="Default" />
       <updated>1544443673837</updated>
       <workItem from="1544443682131" duration="4654000" />
-      <workItem from="1545157946665" duration="28337000" />
+      <workItem from="1545157946665" duration="36944000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32991000" />
+    <option name="totallyTimeSpent" value="41598000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="762" y="0" width="781" height="830" extended-state="0" />
-    <editor active="true" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.31900138" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15436241" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -881,7 +884,7 @@
       <window_info anchor="bottom" id="Database Console" sideWeight="0.69902915" weight="0.3323782" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.69486827" visible="true" weight="0.48567334" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.76375836" weight="0.48016998" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4986577" weight="0.39943343" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -889,7 +892,7 @@
       <window_info anchor="bottom" id="Build" order="7" weight="0.3323782" />
       <window_info anchor="bottom" id="Spring" order="8" />
       <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.30513176" side_tool="true" visible="true" weight="0.48567334" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.23624161" side_tool="true" visible="true" weight="0.48016998" />
       <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.4986577" weight="0.32152975" />
       <window_info anchor="bottom" id="Java Enterprise" order="12" />
       <window_info anchor="bottom" id="Database Changes" order="13" sideWeight="0.49932885" weight="0.3286119" />
@@ -1000,13 +1003,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/src/Application.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-113">
-          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="das://a727a853-63f7-4d84-b1d9-ccd1385d36b1/database/postgres/schema/public/table/shopping_items/index/shopping_items_pkey">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
@@ -1028,20 +1024,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/data.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="13" lean-forward="true" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/kotlin/src/GreetingController.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -1049,32 +1031,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/src/ItemRepository.kt">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/src/SecurityConfig.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="29" lean-forward="true" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
+        <state relative-caret-position="119">
+          <caret line="7" column="14" lean-forward="true" selection-start-line="7" selection-start-column="14" selection-end-line="7" selection-end-column="14" />
           <folding>
-            <element signature="e#13#155#0" expanded="true" />
+            <element signature="e#13#252#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/kotlin/src/Controller.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="16" column="26" lean-forward="true" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
+        <state relative-caret-position="-7">
+          <caret line="34" column="58" selection-start-line="34" selection-start-column="58" selection-end-line="34" selection-end-column="58" />
           <folding>
             <element signature="e#13#181#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/src/SecurityConfig.kt">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/src/ItemRepository.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="30" selection-start-line="8" selection-start-column="30" selection-end-line="8" selection-end-column="30" />
+        <state relative-caret-position="102">
+          <caret line="6" column="60" lean-forward="true" selection-start-line="6" selection-start-column="60" selection-end-line="6" selection-end-column="60" />
           <folding>
-            <element signature="e#13#252#0" expanded="true" />
+            <element signature="e#13#155#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1083,6 +1065,27 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
           <caret line="8" column="21" lean-forward="true" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/src/Application.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="38" column="1" lean-forward="true" selection-start-line="38" selection-start-column="1" selection-end-line="38" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="35" lean-forward="true" selection-start-line="2" selection-start-column="35" selection-end-line="2" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/data.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="64" selection-start-line="1" selection-start-column="64" selection-end-line="1" selection-end-column="64" />
         </state>
       </provider>
     </entry>

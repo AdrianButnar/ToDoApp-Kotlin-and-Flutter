@@ -12,21 +12,27 @@ import android.view.Menu
 import android.view.MenuItem
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import io.realm.RealmList
 import io.realm.RealmModel
 import io.realm.kotlin.delete
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
-//import net.openid.appauth.AuthState
-
 
 
 class MainActivity : AppCompatActivity() {
-
+    private lateinit var realm: Realm
     private lateinit var myAdapter: ShoppingItemsAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
+
+        Realm.init(getApplicationContext());
+
+        val realmConfiguration = RealmConfiguration.Builder()
+            .name(Realm.DEFAULT_REALM_NAME)
+            .deleteRealmIfMigrationNeeded()
+            .build()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -54,7 +60,7 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.addBtn -> {
                     val intent = Intent(this, ShoppingItemActivity::class.java)
-                    startActivityForResult(intent, -1)
+                    startActivityForResult(intent, 1)
 
                 }
 
@@ -64,21 +70,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+//        if (myAdapter.verifyAvailableNetwork(this)) {
+//            myAdapter.addItemToServer(realm.where<ShoppingItem>().findAll().last()!!)
+//        }
+//        else {
+//            syncList.add(realm.where<ShoppingItem>().findAll().last())
+//        }
+        myAdapter.refreshLocal()
+        myAdapter.syncList.add(Realm.getDefaultInstance().where<ShoppingItem>().findAll().last())
+        if (myAdapter.verifyAvailableNetwork(this))
+            myAdapter.syncRealmWithServer()
         myAdapter.notifyDataSetChanged()
     }
 
     override fun onResume() {
         logd("onResume was called")
         super.onResume()
-        myAdapter.notifyDataSetChanged();
-        //loadAll()
+        myAdapter.notifyDataSetChanged()
     }
 
-    fun loadAll() {
-
-        val itemsAdapter = ShoppingItemsAdapter(this)
-        shoppingListRecyclerView.adapter = itemsAdapter
-    }
 
     override fun onDestroy() {
         super.onDestroy()

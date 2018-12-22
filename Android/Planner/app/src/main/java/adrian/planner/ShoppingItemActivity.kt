@@ -5,15 +5,30 @@ import android.content.ContentValues
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import io.realm.RealmList
+import io.realm.RealmResults
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_add_item.*
 
-class ShoppingItemActivity : AppCompatActivity() {
-    //private var realm: Realm = Realm.getDefaultInstance()
+class ShoppingItemActivity() : AppCompatActivity() {
+    private var realm: Realm = Realm.getDefaultInstance()
 
+    val client by lazy { ModelClientAPI.create() }
+
+    fun updateItemOnServer(item: ShoppingItem) {
+        client.updateItem(item.id, item)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ }, { throwable ->
+                Toast.makeText(this, "Update error: ${throwable.message}", Toast.LENGTH_LONG).show()
+            }
+            )
+    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -35,29 +50,32 @@ class ShoppingItemActivity : AppCompatActivity() {
 
             if(bundle == null) {
 
-                //Supplier.shopppingItems.add(ShoppingItem(edtTitle.text.toString(), edtQuantity.text.toString()))
-//                realm.executeTransaction { realm ->
-//                    val id:Int;
-//                    if(realm.where<ShoppingItem>().findAll().size != 0) {
-//                        id = realm.where<ShoppingItem>().findAll().last()!!.id + 1
-//                    }
-//                    else{
-//                        id = 1
-//                    }
-//                    val item = realm.createObject<ShoppingItem>(id)
-//                    item.title = edtTitle.text.toString()
-//                    item.quantity = edtQuantity.text.toString()
-//                }
+//                Supplier.shopppingItems.add(ShoppingItem(edtTitle.text.toString(), edtQuantity.text.toString()))
+                realm.executeTransaction { realm ->
+                    val id:Int;
+                    if(realm.where<ShoppingItem>().findAll().size != 0) {
+                        id = realm.where<ShoppingItem>().findAll().last()!!.id + 1
+                    }
+                    else{
+                        id = 1
+                    }
+                    val item = realm.createObject<ShoppingItem>(id)
+                    item.title = edtTitle.text.toString()
+                    item.quantity = edtQuantity.text.toString()
+                }
+
                 finish()
             }
             else{
-//                realm.executeTransaction { realm ->
-//
-//                    val id:Int = bundle.getInt("itemId")
-//                    val item:ShoppingItem = realm.where<ShoppingItem>().equalTo("id",id).findFirst()!!
-//                    item.title = edtTitle.text.toString()
-//                    item.quantity = edtQuantity.text.toString()
-//                }
+                realm.executeTransaction { realm ->
+                    val id:Int = bundle.getInt("itemId")
+                    val item:ShoppingItem = realm.where<ShoppingItem>().equalTo("id",id).findFirst()!!
+                    item.title = edtTitle.text.toString()
+                    item.quantity = edtQuantity.text.toString()
+                }
+                updateItemOnServer(ShoppingItem(bundle.getInt("itemId"),edtTitle.text.toString(),edtQuantity.text.toString()))
+
+
                 finish()
             }
         }
