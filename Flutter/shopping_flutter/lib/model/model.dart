@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:shopping_flutter/utils/databaseHelpers.dart';
+import 'package:http/http.dart' as http;
+
 
 class ShoppingItem{
    int id;
@@ -28,6 +30,19 @@ class ShoppingItem{
     return map;
   }
 
+  Map<String, dynamic> toSuperMap() {
+    var map = new Map<String, dynamic>();
+    if (id != null) {
+      map['id'] = id;
+      map['id'] = id;
+    }
+    map['title'] = title;
+    map['quantity'] = quantity;
+
+    return map;
+  }
+
+
   ShoppingItem.fromMap(Map<String, dynamic> map) {
     this.id = map['id'];
     this.title = map['title'];
@@ -41,6 +56,7 @@ class ShoppingItem{
       quantity: quantity
     );
   }
+
 }
 
 class AppState {

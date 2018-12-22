@@ -10,16 +10,80 @@ import "package:shopping_flutter/redux/reducers.dart";
 import 'package:shopping_flutter/utils/databaseHelpers.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:dio/dio.dart';
+import 'dart:io';
+import 'package:fluttertoast/fluttertoast.dart';
+
+
+Dio dio = new Dio();
+String basepath = 'http://10.0.2.2:8080/api';
 var db = new DatabaseHelper();
+List<ShoppingItem> syncList = new List();
 
+Future syncLocalToDB() async {
+  for (ShoppingItem item in syncList){
+    await dio.post(basepath+"/items",data: item.toMap());//!!VEZI CA NU IA ID-ul de aici, pune altul in functie de primary key
+
+  }
+  syncList.clear();
+}
+
+Future<bool> accessToInternet() async {
+  try {
+    final result = await InternetAddress.lookup('www.google.com');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+  catch(Exception){
+    return false;
+  }
+}
+
+Future<List<ShoppingItem>> fetchItems() async {
+  final response =
+  await http.get('http://10.0.2.2:8080/api/items');
+
+  return parseItems(response.body);
+}
+
+List<ShoppingItem> parseItems(String responseBody) {
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<ShoppingItem>((json) => ShoppingItem.fromMap(json)).toList();
+}
 Future main() async{
-
+  print(await accessToInternet());
   //await db.saveNote(new ShoppingItem("Flutter Tutorials"));
   db.initDb();
   List initialShoppingList = await db.getAllItems();
   //db.saveItem(ShoppingItem(id: -2, title: "HARDCODED", quantity: "ITEM"));
   List<ShoppingItem> newList = new List<ShoppingItem>();
   initialShoppingList.forEach((item)=>(newList.add(ShoppingItem.fromMap(item))));
+
+  //ceva pentru server part
+
+//
+//   final http.Response response = await http.get('https://jsonplaceholder.typicode.com/posts/1');
+//   if(response.statusCode == 200){
+//     return json.decode(response.body);
+//   }
+  if(await accessToInternet()) {
+    newList = await fetchItems();
+
+    //sync remote db to localdb
+    initialShoppingList.forEach((item)=>(db.deleteItem(ShoppingItem.fromMap(item).id)));
+    newList.forEach((item)=>(db.saveItem(item)));
+  }
+  //var response = await dio.post(basepath+"/items",data: new ShoppingItem(id: -2, title: 'buna', quantity: 'cf').toMap());
+  //var response = await dio.delete('http://10.0.2.2:8080/api/items/8',data:8);
+  //FormData formData = new FormData.from({"id":7,"ShoppingItem":new ShoppingItem(id: 7, title: 'update', quantity: 'works').toMap()});
+  //var response = await dio.put('http://10.0.2.2:8080/api/items/7',data: formData);
+  //var response = await dio.put('http://10.0.2.2:8080/api/items/7',data: new ShoppingItem(id: 7, title: 'update', quantity: 'works').toSuperMap());
+
   runApp(MyApp(db,newList));
 }
 
@@ -301,6 +365,13 @@ class _ViewModel{
           maxId++;
         }
         await db.saveItem(ShoppingItem(id: maxId, title: title, quantity: quantity));
+        if(await accessToInternet()){
+          syncLocalToDB();
+          await dio.post(basepath+"/items",data: new ShoppingItem(id: -2, title: title, quantity: quantity).toMap());//!!VEZI CA NU IA ID-ul de aici, pune altul in functie de primary key
+        }
+        else{
+          syncList.add(ShoppingItem(id: maxId, title: title, quantity: quantity));
+        }
         List elems = await db.getAllItems();
         List<ShoppingItem> newList = new List<ShoppingItem>();
         elems.forEach((item) => (newList.add(ShoppingItem.fromMap(item))));
@@ -312,26 +383,42 @@ class _ViewModel{
       //store.dispatch(ThunkAction.saveItem);
     }
 
+
+
     _onRemoveItem(DatabaseHelper db,ShoppingItem item) {
       ThunkAction<AppState> removeThunk = (Store<AppState> store) async {
-        await db.deleteItem(item.id);
+        if(await accessToInternet()) {
+          syncLocalToDB();
+          await db.deleteItem(item.id);
+          await dio.delete(basepath + '/items/' + item.id.toString(), data: item.id);
+          store.dispatch(RemoveItemAction(item));
 
+        }
+        else{
+          Fluttertoast.showToast(
+              msg: "Delete cannot be performed offline",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIos: 1
+          );
+        }
         //return newList;
-        store.dispatch(RemoveItemAction(item));
       };
-        store.dispatch(removeThunk);
+      store.dispatch(removeThunk);
 
     }
 
     _onEditItem(DatabaseHelper db,ShoppingItem item,String newTitle,String newQuantity){
       ThunkAction<AppState> editThunk = (Store<AppState> store) async {
-        await db.deleteItem(item.id);
-        await db.saveItem(ShoppingItem(id: item.id, title: newTitle, quantity: newQuantity));
-        List elems = await db.getAllItems();
-        List<ShoppingItem> newList = new List<ShoppingItem>();
-        elems.forEach((item) => (newList.add(ShoppingItem.fromMap(item))));
-        //return newList;
-        store.dispatch(EditItemAction(item,newTitle,newQuantity));
+          syncLocalToDB();
+          await db.deleteItem(item.id);
+          await db.saveItem(ShoppingItem(id: item.id, title: newTitle, quantity: newQuantity));
+          await dio.put(basepath + '/items/' + item.id.toString(),data: new ShoppingItem(id: item.id, title: newTitle, quantity: newQuantity).toSuperMap());
+          List elems = await db.getAllItems();
+          List<ShoppingItem> newList = new List<ShoppingItem>();
+          elems.forEach((item) => (newList.add(ShoppingItem.fromMap(item))));
+          //return newList;
+          store.dispatch(EditItemAction(item, newTitle, newQuantity));
       };
       store.dispatch(editThunk);
    }
@@ -343,6 +430,7 @@ class _ViewModel{
       onRemoveItem: _onRemoveItem,
     );
   }
+
 
 }
 
@@ -386,12 +474,22 @@ class ItemListWidget extends StatelessWidget {
   ItemListWidget(this.model);
   @override
   Widget build(BuildContext context) {
-    void _edit(_ViewModel model,ShoppingItem item) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => EditScreen(model,item)),
+    Future _edit(_ViewModel model,ShoppingItem item) async {
+      if(await accessToInternet()) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => EditScreen(model, item)),
 
-      );
+        );
+      }
+      else{
+        Fluttertoast.showToast(
+            msg: "Edit cannot be performed offline",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIos: 1
+        );
+      }
     }
     return ListView(
       children: model.items
