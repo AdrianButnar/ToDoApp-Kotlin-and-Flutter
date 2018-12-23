@@ -32,7 +32,7 @@ Future syncLocalToDB() async {
 
 Future<bool> accessToInternet() async {
   try {
-    final result = await InternetAddress.lookup('www.google.com');
+    final result = await InternetAddress.lookup('www.google.com');//or basepath
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
       return true;
     }
@@ -367,7 +367,7 @@ class _ViewModel{
         await db.saveItem(ShoppingItem(id: maxId, title: title, quantity: quantity));
         if(await accessToInternet()){
           syncLocalToDB();
-          await dio.post(basepath+"/items",data: new ShoppingItem(id: -2, title: title, quantity: quantity).toMap());//!!VEZI CA NU IA ID-ul de aici, pune altul in functie de primary key
+          await dio.post(basepath+"/items",data: new ShoppingItem(id: maxId, title: title, quantity: quantity).toMap());//!!AICI ERA FAZA CU -2.VEZI CA NU IA ID-ul de aici, pune altul in functie de primary key
         }
         else{
           syncList.add(ShoppingItem(id: maxId, title: title, quantity: quantity));
@@ -411,8 +411,9 @@ class _ViewModel{
     _onEditItem(DatabaseHelper db,ShoppingItem item,String newTitle,String newQuantity){
       ThunkAction<AppState> editThunk = (Store<AppState> store) async {
           syncLocalToDB();
-          await db.deleteItem(item.id);
-          await db.saveItem(ShoppingItem(id: item.id, title: newTitle, quantity: newQuantity));
+//          await db.deleteItem(item.id);
+//          await db.saveItem(ShoppingItem(id: item.id, title: newTitle, quantity: newQuantity));
+          await db.updateItem(ShoppingItem(id: item.id, title: newTitle, quantity: newQuantity));
           await dio.put(basepath + '/items/' + item.id.toString(),data: new ShoppingItem(id: item.id, title: newTitle, quantity: newQuantity).toSuperMap());
           List elems = await db.getAllItems();
           List<ShoppingItem> newList = new List<ShoppingItem>();

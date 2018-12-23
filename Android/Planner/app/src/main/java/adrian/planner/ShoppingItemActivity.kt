@@ -52,9 +52,11 @@ class ShoppingItemActivity() : AppCompatActivity() {
 
 //                Supplier.shopppingItems.add(ShoppingItem(edtTitle.text.toString(), edtQuantity.text.toString()))
                 realm.executeTransaction { realm ->
-                    val id:Int;
+                    var id:Int;
                     if(realm.where<ShoppingItem>().findAll().size != 0) {
                         id = realm.where<ShoppingItem>().findAll().last()!!.id + 1
+                        while (realm.where<ShoppingItem>().equalTo("id",id).findFirst() != null)
+                            id++;
                     }
                     else{
                         id = 1
