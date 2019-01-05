@@ -3,7 +3,10 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:padding="15dp">
+              android:padding="15dp"
+              android:background="?attr/backGroundColor">
+
+
 
     <EditText
             android:id="@+id/edtTitle"
@@ -11,6 +14,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:hint="Item title"
+            android:textColor="?attr/textColor"
+            android:background="?attr/cardBackgroundColor"
             android:inputType="textPersonName" />
 
     <EditText
@@ -19,6 +24,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:hint="Item quantity"
+            android:textColor="?attr/textColor"
+            android:background="?attr/cardBackgroundColor"
             android:inputType="textPersonName" />
 
     <Button

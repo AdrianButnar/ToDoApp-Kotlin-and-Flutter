@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="textColor">@color/cardview_dark_background</item>
         <item name="cardBackgroundColor">@color/cardview_light_background</item>
+        <item name="backGroundColor">#e8f9f7</item>
         <item name="android:windowAnimationStyle">@style/WindowsAnimationTransition</item>
 
     </style>
@@ -19,6 +20,8 @@
         <!--<item name="card">@color/cardview_dark_background</item>-->
         <item name="textColor">@color/cardview_light_background</item>
         <item name="cardBackgroundColor">@color/cardview_dark_background</item>
+        <item name="backGroundColor">#171256</item>
+
         <item name="android:windowAnimationStyle">@style/WindowsAnimationTransition</item>
 
 

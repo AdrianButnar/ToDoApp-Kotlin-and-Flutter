@@ -12,6 +12,7 @@ import android.widget.Switch
 import android.widget.Toast
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_main.*
+import tyrantgit.explosionfield.ExplosionField
 
 class MainActivity : AppCompatActivity() {
     private lateinit var myAdapter: ShoppingItemsAdapter
@@ -36,8 +37,8 @@ class MainActivity : AppCompatActivity() {
         layoutManager.orientation = LinearLayoutManager.VERTICAL //or orizontal
         shoppingListRecyclerView.layoutManager = layoutManager
 
-
-        val adapter = ShoppingItemsAdapter(this,shoppingItems)
+        val explosionField : ExplosionField = ExplosionField.attach2Window(this);
+        val adapter = ShoppingItemsAdapter(this,shoppingItems,explosionField)
         myAdapter = adapter
         shoppingListRecyclerView.adapter = adapter
 

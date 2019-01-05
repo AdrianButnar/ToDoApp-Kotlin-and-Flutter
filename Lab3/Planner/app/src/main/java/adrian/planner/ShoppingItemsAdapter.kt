@@ -2,6 +2,7 @@ package adrian.planner
 
 import android.content.Context
 import android.content.Intent
+import android.os.SystemClock
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +10,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.list_item.view.*
+import tyrantgit.explosionfield.ExplosionField
 
-class ShoppingItemsAdapter(val context: Context, var shoppingItems: MutableList<ShoppingItem>) : RecyclerView.Adapter<ShoppingItemsAdapter.MyViewHolder>(){
+class ShoppingItemsAdapter(val context: Context, var shoppingItems: MutableList<ShoppingItem>,val explosionField: ExplosionField) : RecyclerView.Adapter<ShoppingItemsAdapter.MyViewHolder>(){
     private lateinit var mRecyclerView: RecyclerView;
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -46,25 +48,33 @@ class ShoppingItemsAdapter(val context: Context, var shoppingItems: MutableList<
 
         init {
 
-
-
-            itemView.setOnClickListener {
-                //Toast.makeText(context,currentItem!!.title + "Clicked !", Toast.LENGTH_SHORT).show()
-                val intent = Intent(context,ShoppingItemActivity::class.java)
-                intent.putExtra("itemPosition",currentPosition)//asta e ca sa stiu ce element trebuie sa updatez in lista de supplier
-                intent.putExtra("itemTitle", itemView.txvTitle.text.toString())
-                intent.putExtra("itemQuantity", itemView.txvQuantity.text.toString())
-                intent.putExtra("itemId",currentItem!!.id)
-                context.startActivity(intent)
+            itemView.setOnClickListener{
+                explosionField.explode(itemView)
+                val ref = FirebaseDatabase.getInstance().getReference("items")
+                ref.child(currentItem!!.id).removeValue().addOnCompleteListener {
+                    Toast.makeText(context,"Item Sucessfully deleted", Toast.LENGTH_LONG).show();
+                }
             }
+//            itemView.setOnClickListener {
+//                //Toast.makeText(context,currentItem!!.title + "Clicked !", Toast.LENGTH_SHORT).show()
+//                val intent = Intent(context,ShoppingItemActivity::class.java)
+//                intent.putExtra("itemPosition",currentPosition)//asta e ca sa stiu ce element trebuie sa updatez in lista de supplier
+//                intent.putExtra("itemTitle", itemView.txvTitle.text.toString())
+//                intent.putExtra("itemQuantity", itemView.txvQuantity.text.toString())
+//                intent.putExtra("itemId",currentItem!!.id)
+//                context.startActivity(intent)
+//            }
             itemView.imgDelete.setOnClickListener{
 //                shoppingItems.remove(currentItem);
 //                notifyDataSetChanged()
+                explosionField.explode(itemView)
+
                 val ref = FirebaseDatabase.getInstance().getReference("items")
                 ref.child(currentItem!!.id).removeValue().addOnCompleteListener {
                     Toast.makeText(context,"Item Sucessfully deleted", Toast.LENGTH_LONG).show();
                     notifyDataSetChanged()
                 }
+
 
             }
             itemView.imgEdit.setOnClickListener{

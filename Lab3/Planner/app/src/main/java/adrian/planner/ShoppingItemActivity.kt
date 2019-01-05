@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatDelegate
 import android.widget.Toast
 import com.google.firebase.database.FirebaseDatabase
 import io.realm.Realm
@@ -19,6 +20,11 @@ class ShoppingItemActivity : AppCompatActivity() {
     private val ref = FirebaseDatabase.getInstance().getReference("items")
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (AppCompatDelegate.getDefaultNightMode()== AppCompatDelegate.MODE_NIGHT_YES)
+            setTheme(R.style.darkTheme)
+        else
+            setTheme(R.style.AppTheme)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item)
 
