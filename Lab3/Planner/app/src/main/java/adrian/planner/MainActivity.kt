@@ -10,11 +10,19 @@ import android.view.MenuItem
 import android.widget.CompoundButton
 import android.widget.Switch
 import android.widget.Toast
+import com.google.android.gms.ads.AdRequest
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_main.*
 import tyrantgit.explosionfield.ExplosionField
+import com.google.android.gms.ads.AdView
+
+
 
 class MainActivity : AppCompatActivity() {
+    //ad part
+    private val TAG = "MainActivity"
+    private lateinit var mAdView : AdView
+
     private lateinit var myAdapter: ShoppingItemsAdapter
     private var shoppingItems: MutableList<ShoppingItem> = mutableListOf()
     private lateinit var ref: DatabaseReference
@@ -60,6 +68,10 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        //ad part
+        mAdView = findViewById(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
 
     }
 
